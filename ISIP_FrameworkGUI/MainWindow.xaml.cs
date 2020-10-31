@@ -26,18 +26,22 @@ namespace ISIP_FrameworkGUI
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    
-    
+
+
     public partial class MainWindow : Window
     {
         //private Windows.Grafica dialog;
         Windows.Magnifyer MagnifWindow;
         Windows.GLine RowDisplay;
         Windows.EmDialog Em;
+        Windows.TDialog Tdialog;
+        Windows.tDialog tdialog;
+
 
         bool Magif_SHOW = false;
         bool GL_ROW_SHOW = false;
         bool Em_SHOW = false;
+        bool T_SHOW = false;
 
         System.Windows.Point lastClick = new System.Windows.Point(0, 0);
         System.Windows.Point upClick = new System.Windows.Point(0, 0);
@@ -45,12 +49,14 @@ namespace ISIP_FrameworkGUI
 
         private double m;
         private float E;
+        private int T;
+        private float t;
 
         public MainWindow()
         {
             InitializeComponent();
             mainControl.OriginalImageCanvas.MouseDown += new MouseButtonEventHandler(OriginalImageCanvas_MouseDown);
-         }
+        }
 
         void OriginalImageCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -97,7 +103,7 @@ namespace ISIP_FrameworkGUI
             mainControl.LoadImageDialog(ImageType.Grayscale);
             Magnifyer_ON.IsEnabled = true;
             GL_ROW_ON.IsEnabled = true;
-           
+
         }
 
         private void openColorImageMenuItem_Click(object sender, RoutedEventArgs e)
@@ -121,7 +127,7 @@ namespace ISIP_FrameworkGUI
             {
                 mainControl.OriginalGrayscaleImage = mainControl.ProcessedGrayscaleImage;
             }
-            else if(mainControl.ProcessedColorImage != null)
+            else if (mainControl.ProcessedColorImage != null)
             {
                 mainControl.OriginalColorImage = mainControl.ProcessedColorImage;
             }
@@ -132,7 +138,7 @@ namespace ISIP_FrameworkGUI
             if (mainControl.OriginalGrayscaleImage != null)
             {
 
-                mainControl.ProcessedGrayscaleImage=Tools.Invert(mainControl.OriginalGrayscaleImage);
+                mainControl.ProcessedGrayscaleImage = Tools.Invert(mainControl.OriginalGrayscaleImage);
             }
 
         }
@@ -141,7 +147,7 @@ namespace ISIP_FrameworkGUI
             if (mainControl.OriginalGrayscaleImage != null)
             {
 
-                mainControl.ProcessedGrayscaleImage=Tools.Mirror(mainControl.OriginalGrayscaleImage);
+                mainControl.ProcessedGrayscaleImage = Tools.Mirror(mainControl.OriginalGrayscaleImage);
             }
 
         }
@@ -149,7 +155,7 @@ namespace ISIP_FrameworkGUI
         {
             if (mainControl.OriginalGrayscaleImage != null)
             {
-                if(Em_SHOW)
+                if (Em_SHOW)
                 {
                     Em_SHOW = false;
                     Em.Close();
@@ -160,7 +166,7 @@ namespace ISIP_FrameworkGUI
                     Em.Show();
                     Em_SHOW = true;
                 }
-               // mainControl.ProcessedGrayscaleImage=Tools.Mirror(mainControl.OriginalGrayscaleImage);
+                // mainControl.ProcessedGrayscaleImage=Tools.Mirror(mainControl.OriginalGrayscaleImage);
             }
 
         }
@@ -214,25 +220,82 @@ namespace ISIP_FrameworkGUI
             }
         }
 
+        private void Bin_3D_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (mainControl.OriginalColorImage != null)
+            {
+                if (T_SHOW)
+                {
+                    T_SHOW = false;
+                    Tdialog.Close();
+                }
+                else
+                {
+                    Tdialog = new Windows.TDialog(this);
+                    Tdialog.Show();
+                    T_SHOW = true;
+                }
+                // mainControl.ProcessedGrayscaleImage=Tools.Mirror(mainControl.OriginalGrayscaleImage);
+            }
+        }
+
+        private void Bin_2D_Click(object sender, RoutedEventArgs e)
+        {
+            if (mainControl.OriginalColorImage != null)
+            {
+                if (T_SHOW)
+                {
+                    T_SHOW = false;
+                    tdialog.Close();
+                }
+                else
+                {
+                    tdialog = new Windows.tDialog(this);
+                    tdialog.Show();
+                    T_SHOW = true;
+                }
+                // mainControl.ProcessedGrayscaleImage=Tools.Mirror(mainControl.OriginalGrayscaleImage);
+            }
+        }
 
 
+        public void setTValue(int Tvalue)
+        {
+            T = Tvalue;
+        }
+        public void settValue(float tvalue)
+        {
+            t = tvalue;
+        }
 
         public void setmValue(double newM)
         {
             m = newM;
         }
 
-        public  void setEValue(float newE) 
+        public void setEValue(float newE)
         {
             E = newE;
         }
 
         public void ContrastActivation()
         {
-            mainControl.ProcessedGrayscaleImage = Tools.Contrast(mainControl.OriginalGrayscaleImage,m,E);
+            mainControl.ProcessedGrayscaleImage = Tools.Contrast(mainControl.OriginalGrayscaleImage, m, E);
+        }
+
+
+        public void Binarizare3DActivation()
+        {
+            mainControl.ProcessedColorImage = Tools.Bin3D(mainControl.OriginalColorImage, T, lastClick);
         }
         
-        
-       
+        public void Binarizare2DActivation()
+        {
+            mainControl.ProcessedColorImage = Tools.Bin2D(mainControl.OriginalColorImage, t, lastClick);
+        }
+
+
+
     }
 }

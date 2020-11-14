@@ -1,6 +1,7 @@
 ﻿using Emgu.CV;
 using Emgu.CV.Structure;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 namespace ISIP_Algorithms.Tools
 {
@@ -100,8 +101,8 @@ namespace ISIP_Algorithms.Tools
             double G0 = InputImage.Data[initY, initX, 1];
             double B0 = InputImage.Data[initY, initX, 2];
 
-            double r0 = R0 / (R0+G0+B0);
-            double g0 = G0 / (R0+G0+B0);
+            double r0 = R0 / (R0 + G0 + B0);
+            double g0 = G0 / (R0 + G0 + B0);
             //double b0 = InputImage.Data[initY, initX, 2];
 
             Image<Bgr, byte> Result = new Image<Bgr, byte>(InputImage.Size);
@@ -131,6 +132,67 @@ namespace ISIP_Algorithms.Tools
                         Result.Data[y, x, 1] = 255;
                         Result.Data[y, x, 2] = 255;
                     }
+                }
+            }
+            return Result;
+        }
+
+        private static int Suma(Image<Gray, byte> InputImage, int y, int x)
+        {
+            int sum = InputImage.Data[y, x, 0] + InputImage.Data[y - 1, x - 1, 0] + InputImage.Data[y, x - 1, 0] + InputImage.Data[y + 1, x - 1, 0]
+                    + InputImage.Data[y - 1, x, 0] + InputImage.Data[y + 1, x, 0] + InputImage.Data[y - 1, x + 1, 0] + InputImage.Data[y, x + 1, 0]
+                    + InputImage.Data[y + 1, x + 1, 0];
+
+            return sum;
+        }
+        private static double SumaVar(Image<Gray, byte> InputImage, int y, int x, float media)
+        {
+            double sum = Math.Pow(InputImage.Data[y, x, 0] - media, 2) + Math.Pow(InputImage.Data[y - 1, x - 1, 0] - media, 2) + Math.Pow(InputImage.Data[y, x - 1, 0] - media, 2)
+                + Math.Pow(InputImage.Data[y + 1, x - 1, 0] - media, 2) + Math.Pow(InputImage.Data[y - 1, x, 0] - media, 2) + Math.Pow(InputImage.Data[y + 1, x, 0] - media, 2)
+                + Math.Pow(InputImage.Data[y - 1, x + 1, 0] - media, 2) + Math.Pow(InputImage.Data[y, x + 1, 0] - media, 2) + Math.Pow(InputImage.Data[y + 1, x + 1, 0] - media, 2);
+
+            return sum;
+        }
+        private static double MediaVariatieMinima(Image<Gray, byte> InputImage, int y, int x)
+        {
+            double m;
+            float[] medi = new float[5];
+            double[] variatie = new double[5];
+
+            medi[0] = Suma(InputImage, y - 1, x - 1) / 9;
+            medi[1] = Suma(InputImage, y + 1, x - 1) / 9;
+            medi[2] = Suma(InputImage, y - 1, x + 1) / 9;
+            medi[3] = Suma(InputImage, y + 1, x + 1) / 9;
+            medi[4] = Suma(InputImage, y, x) / 9;
+
+            variatie[0] = SumaVar(InputImage, y - 1, x - 1, medi[0]) / 9;
+            variatie[1] = SumaVar(InputImage, y + 1, x - 1, medi[1]) / 9;
+            variatie[2] = SumaVar(InputImage, y - 1, x + 1, medi[2]) / 9;
+            variatie[3] = SumaVar(InputImage, y + 1, x + 1, medi[3]) / 9;
+            variatie[4] = SumaVar(InputImage, y, x, medi[4]) / 9;
+
+            double v = variatie[0];
+            m = medi[0];
+            for (int i = 1; i < 5; i++)
+            {
+                if (v > variatie[i])
+                {
+                    v = variatie[i];
+                    m = medi[i];
+                }
+            }
+            return m;
+        }
+
+        public static Image<Gray, byte> Kuwahara(Image<Gray, byte> InputImage)
+        {
+
+            Image<Gray, byte> Result = new Image<Gray, byte>(InputImage.Size);
+            for (int y = 2; y < InputImage.Height - 3; y++)
+            {
+                for (int x = 2; x < InputImage.Width - 3; x++)
+                {
+                    Result.Data[y, x, 0] = (byte)MediaVariatieMinima(InputImage,y,x);
                 }
             }
             return Result;

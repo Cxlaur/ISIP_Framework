@@ -259,6 +259,14 @@ namespace ISIP_FrameworkGUI
             }
         }
 
+        private void Kuwahara_Click(object sender, RoutedEventArgs e)
+        {
+            if (mainControl.OriginalGrayscaleImage != null)
+            {
+               mainControl.ProcessedGrayscaleImage=Tools.Kuwahara(mainControl.OriginalGrayscaleImage);
+            }
+        }
+
 
         public void setTValue(int Tvalue)
         {

@@ -32,6 +32,7 @@
 
              </MenuItem>
             <MenuItem Header="Filters">
+                <MenuItem Header="Kuwahara" Click="Kuwahara_Click"/>
             </MenuItem>
 
             <MenuItem Header="Binarizare">

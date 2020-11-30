@@ -52,7 +52,7 @@ namespace ISIP_Algorithms.Tools
             return Result;
         }
 
-        public static Image<Bgr, byte> Bin3D(Image<Bgr, byte> InputImage, int T, Point InitColor)
+        public static Image<Bgr, byte> Bin3D(Image<Bgr, byte> InputImage, double T, Point InitColor)
         {
             double R, G, B, d;
 
@@ -187,12 +187,63 @@ namespace ISIP_Algorithms.Tools
         public static Image<Gray, byte> Kuwahara(Image<Gray, byte> InputImage)
         {
 
-            Image<Gray, byte> Result = new Image<Gray, byte>(InputImage.Size);
+            Image<Gray, byte> Result = InputImage.Clone();
             for (int y = 2; y < InputImage.Height - 3; y++)
             {
                 for (int x = 2; x < InputImage.Width - 3; x++)
                 {
-                    Result.Data[y, x, 0] = (byte)MediaVariatieMinima(InputImage,y,x);
+                    Result.Data[y, x, 0] = (byte)MediaVariatieMinima(InputImage, y, x);
+                }
+            }
+            return Result;
+        }
+
+        private static float Sx(Image<Gray, byte> InputImage, int y, int x)
+        {
+            float Result = InputImage.Data[y + 1, x - 1, 0] - InputImage.Data[y - 1, x - 1, 0] +
+                2 * InputImage.Data[y + 1, x, 0] - 2 * InputImage.Data[y - 1, x, 0] +
+                InputImage.Data[y + 1, x + 1, 0] - InputImage.Data[y - 1, x + 1, 0];
+
+            return Result;
+        }
+
+        private static float Sy(Image<Gray, byte> InputImage, int y, int x)
+        {
+            float Result = InputImage.Data[y - 1, x + 1, 0] - InputImage.Data[y - 1, x - 1, 0] +
+                2 * InputImage.Data[y, x + 1, 0] - 2 * InputImage.Data[y, x - 1, 0] +
+                InputImage.Data[y + 1, x + 1, 0] - InputImage.Data[y + 1, x - 1, 0];
+
+            return Result;
+        }
+
+
+        public static Image<Gray, byte> Sobel(Image<Gray, byte> InputImage, double T)
+        {
+
+            Image<Gray, byte> Result = InputImage.Clone();
+            for (int y = 2; y < InputImage.Height - 3; y++)
+            {
+                for (int x = 2; x < InputImage.Width - 3; x++)
+                {
+                    double Fx = Sx(InputImage, y, x);
+                    double Fy = Sy(InputImage, y, x);
+                    double gradient = Math.Sqrt(Math.Pow(Fx, 2) + Math.Pow(Fy, 2));
+
+                    if (gradient < T)
+                        Result.Data[y, x, 0] = (byte)0;
+                    else
+                    {
+                        double theta = Math.Atan(Fy / Fx);
+                        if ((theta >= -95 && theta <= -85) || (theta >= 85 && theta <= 95))
+                        {
+                            Result.Data[y, x, 0] = (byte)255;
+                        }
+                        else if ((theta >= -185 && theta <= -175) || (theta >= 175 && theta <= 185))
+                        {
+
+                            Result.Data[y, x, 0] = (byte)0;
+                        }
+                    }
                 }
             }
             return Result;

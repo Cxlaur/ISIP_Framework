@@ -19,19 +19,30 @@ namespace ISIP_FrameworkGUI.Windows
     public partial class TDialog : Window
     {
         MainWindow mainWindow;
-        public TDialog(MainWindow w)
+        Boolean sobel;
+        public TDialog(MainWindow w,Boolean sobel=false)
         {
             InitializeComponent();
             mainWindow = w;
+            this.sobel = sobel;
         }
 
         private void Confirm_btn_Click(object sender, RoutedEventArgs e)
         {
-            if (T_value.Text.Length != 0 )
+            if (T_value.Text.Length != 0)
             {
-                mainWindow.setTValue(int.Parse(T_value.Text));
-                mainWindow.Binarizare3DActivation();
-                Close();
+                if (sobel == false)
+                {
+                    mainWindow.setTValue(int.Parse(T_value.Text));
+                    mainWindow.Binarizare3DActivation();
+                    Close();
+                }
+                else
+                {
+                    mainWindow.setTValue(double.Parse(T_value.Text));
+                    mainWindow.SobelActivation();
+                    Close();
+                }
             }
         }
     }

@@ -49,7 +49,7 @@ namespace ISIP_FrameworkGUI
 
         private double m;
         private float E;
-        private int T;
+        private double T;
         private float t;
 
         public MainWindow()
@@ -266,9 +266,18 @@ namespace ISIP_FrameworkGUI
                mainControl.ProcessedGrayscaleImage=Tools.Kuwahara(mainControl.OriginalGrayscaleImage);
             }
         }
+        
+        private void Sobel_Click(object sender, RoutedEventArgs e)
+        {
+            if (mainControl.OriginalGrayscaleImage != null)
+            {
+                Tdialog = new Windows.TDialog(this,true);
+                Tdialog.Show();
+            }
+        }
 
 
-        public void setTValue(int Tvalue)
+        public void setTValue(double Tvalue)
         {
             T = Tvalue;
         }
@@ -301,6 +310,10 @@ namespace ISIP_FrameworkGUI
         public void Binarizare2DActivation()
         {
             mainControl.ProcessedColorImage = Tools.Bin2D(mainControl.OriginalColorImage, t, lastClick);
+        }
+        public void SobelActivation()
+        {
+            mainControl.ProcessedGrayscaleImage = Tools.Sobel(mainControl.OriginalGrayscaleImage, T);
         }
 
 

@@ -248,5 +248,70 @@ namespace ISIP_Algorithms.Tools
             }
             return Result;
         }
+
+        public static Image<Gray, byte> XOR(Image<Gray, byte> InputImage)
+        {
+            Image<Gray, byte> aux = InputImage.Clone();
+            for (int y = 1; y < InputImage.Height - 1; y++)
+            {
+                for (int x = 1; x < InputImage.Width - 1; x++)
+                {
+                    if (InputImage.Data[y - 1, x - 1, 0] == 255 || InputImage.Data[y, x - 1, 0] == 255 || InputImage.Data[y + 1, x - 1, 0] == 255
+                        || InputImage.Data[y - 1, x, 0] == 255 || InputImage.Data[y, x, 0] == 255 || InputImage.Data[y + 1, x, 0] == 255
+                        || InputImage.Data[y - 1, x + 1, 0] == 255 || InputImage.Data[y, x + 1, 0] == 255 || InputImage.Data[y + 1, x + 1, 0] == 255)
+                    {
+                        aux.Data[y, x, 0] = (byte)255;
+                    }
+                    else
+                    {
+
+                        aux.Data[y, x, 0] = (byte)0;
+                    }
+
+                }
+            }
+
+            Image<Gray, byte> Result = new Image<Gray, byte>(InputImage.Size);
+            for (int y = 1; y < InputImage.Height - 1; y++)
+            {
+                for (int x = 1; x < InputImage.Width - 1; x++)
+                {
+                    if ((InputImage.Data[y, x, 0] == 0 && aux.Data[y, x, 0] == 0) || (InputImage.Data[y, x, 0] == 255 && aux.Data[y, x, 0] == 255))
+                    {
+                        Result.Data[y, x, 0] = (byte)0;
+                    }
+                    else
+                    {
+
+                        Result.Data[y, x, 0] = (byte)255;
+                    }
+
+                }
+            }
+
+            return Result;
+        }
+
+        public static Image<Gray, byte> Binarizare(Image<Gray, byte> InputImage, float t)
+        {
+            int val = (int)t;
+
+            Image<Gray, byte> Result = new Image<Gray, byte>(InputImage.Size);
+            for (int y = 0; y < InputImage.Height; y++)
+            {
+                for (int x = 0; x < InputImage.Width; x++)
+                {
+                    if (InputImage.Data[y,x,0] > val)
+                    {
+                        Result.Data[y, x, 0] = 255;
+                    }
+                    else
+                    {
+                        Result.Data[y, x, 0] = 0;
+                    }
+                }
+            }
+            return Result;
+        }
     }
 }

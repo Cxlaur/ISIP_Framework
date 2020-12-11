@@ -19,9 +19,11 @@ namespace ISIP_FrameworkGUI.Windows
     public partial class tDialog : Window
     {
         MainWindow mainWindow;
-        public tDialog(MainWindow w)
+        bool color;
+        public tDialog(MainWindow w, bool color=true )
         {
             InitializeComponent();
+            this.color = color;
             mainWindow = w;
         }
 
@@ -29,8 +31,17 @@ namespace ISIP_FrameworkGUI.Windows
         {
             if (t_value.Text.Length != 0 )
             {
-                mainWindow.settValue(float.Parse(t_value.Text));
-                mainWindow.Binarizare2DActivation();
+                if (color == true)
+                {
+                    mainWindow.settValue(float.Parse(t_value.Text));
+                    mainWindow.Binarizare2DColorActivation();
+                }
+                else
+                {
+
+                    mainWindow.settValue(float.Parse(t_value.Text));
+                    mainWindow.BinarizareActivation();
+                }
                 Close();
             }
         }

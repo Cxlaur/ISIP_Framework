@@ -29,6 +29,7 @@
                 <MenuItem Header="Invert" Click="Invert_Click"/>
                 <MenuItem Header="Mirror" Click="Mirror_Click"/>
                 <MenuItem Header="Contrast" Click="Contrast_Click"/>
+                <MenuItem Header="XOR" Click="XOR_Click"/>
 
              </MenuItem>
             <MenuItem Header="Filters" >
@@ -39,6 +40,7 @@
             <MenuItem Header="Binarizare">
                 <MenuItem Header="Binarizare 3D" Click="Bin_3D_Click"/>
                 <MenuItem Header="Binarizare 2D" Click="Bin_2D_Click"/>
+                <MenuItem Header="Binarizare" Click="Bin_Click"/>
             </MenuItem>
 
             <MenuItem Header="Save as original image" HorizontalAlignment="Right"

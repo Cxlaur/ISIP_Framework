@@ -168,6 +168,15 @@ namespace ISIP_FrameworkGUI
                 }
                 // mainControl.ProcessedGrayscaleImage=Tools.Mirror(mainControl.OriginalGrayscaleImage);
             }
+        }
+
+        private void XOR_Click(object sender, RoutedEventArgs e)
+        {
+            if (mainControl.OriginalGrayscaleImage != null)
+            {
+
+                mainControl.ProcessedGrayscaleImage = Tools.XOR(mainControl.OriginalGrayscaleImage);
+            }
 
         }
 
@@ -259,19 +268,37 @@ namespace ISIP_FrameworkGUI
             }
         }
 
+        private void Bin_Click(object sender, RoutedEventArgs e)
+        {
+            if (mainControl.OriginalGrayscaleImage != null)
+            {
+                if (T_SHOW)
+                {
+                    T_SHOW = false;
+                    tdialog.Close();
+                }
+                else
+                {
+                    tdialog = new Windows.tDialog(this,false);
+                    tdialog.Show();
+                    T_SHOW = true;
+                }
+            }
+        }
+
         private void Kuwahara_Click(object sender, RoutedEventArgs e)
         {
             if (mainControl.OriginalGrayscaleImage != null)
             {
-               mainControl.ProcessedGrayscaleImage=Tools.Kuwahara(mainControl.OriginalGrayscaleImage);
+                mainControl.ProcessedGrayscaleImage = Tools.Kuwahara(mainControl.OriginalGrayscaleImage);
             }
         }
-        
+
         private void Sobel_Click(object sender, RoutedEventArgs e)
         {
             if (mainControl.OriginalGrayscaleImage != null)
             {
-                Tdialog = new Windows.TDialog(this,true);
+                Tdialog = new Windows.TDialog(this, true);
                 Tdialog.Show();
             }
         }
@@ -306,10 +333,14 @@ namespace ISIP_FrameworkGUI
         {
             mainControl.ProcessedColorImage = Tools.Bin3D(mainControl.OriginalColorImage, T, lastClick);
         }
-        
-        public void Binarizare2DActivation()
+
+        public void Binarizare2DColorActivation()
         {
             mainControl.ProcessedColorImage = Tools.Bin2D(mainControl.OriginalColorImage, t, lastClick);
+        }
+        public void BinarizareActivation()
+        {
+            mainControl.ProcessedGrayscaleImage = Tools.Binarizare(mainControl.OriginalGrayscaleImage, t);
         }
         public void SobelActivation()
         {

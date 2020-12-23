@@ -36,6 +36,7 @@ namespace ISIP_FrameworkGUI
         Windows.EmDialog Em;
         Windows.TDialog Tdialog;
         Windows.tDialog tdialog;
+        Windows.RippleDialog rip;
 
 
         bool Magif_SHOW = false;
@@ -50,6 +51,10 @@ namespace ISIP_FrameworkGUI
         private double m;
         private float E;
         private double T;
+        private double tx;
+        private double ty;
+        private double ax;
+        private double ay;
         private float t;
 
         public MainWindow()
@@ -302,11 +307,35 @@ namespace ISIP_FrameworkGUI
                 Tdialog.Show();
             }
         }
+        private void Ripple_Click(object sender, RoutedEventArgs e)
+        {
+            if (mainControl.OriginalGrayscaleImage != null)
+            {
+                rip = new Windows.RippleDialog(this);
+                rip.Show();
+            }
+        }
 
 
         public void setTValue(double Tvalue)
         {
             T = Tvalue;
+        }
+        public void settxValue(double Tvalue)
+        {
+            tx = Tvalue;
+        }
+        public void settyValue(double Tvalue)
+        {
+            ty = Tvalue;
+        }
+        public void setaxValue(double Tvalue)
+        {
+            ax = Tvalue;
+        }
+        public void setayValue(double Tvalue)
+        {
+            ay = Tvalue;
         }
         public void settValue(float tvalue)
         {
@@ -326,6 +355,11 @@ namespace ISIP_FrameworkGUI
         public void ContrastActivation()
         {
             mainControl.ProcessedGrayscaleImage = Tools.Contrast(mainControl.OriginalGrayscaleImage, m, E);
+        }
+        
+        public void RippleActivation()
+        {
+            mainControl.ProcessedGrayscaleImage = Tools.Ripple(mainControl.OriginalGrayscaleImage,tx,ty,ax,ay);
         }
 
 

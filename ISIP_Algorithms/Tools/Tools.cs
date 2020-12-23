@@ -198,7 +198,7 @@ namespace ISIP_Algorithms.Tools
             return Result;
         }
 
-        private static float Sx(Image<Gray, byte> InputImage, int y, int x)
+        private static float Sy(Image<Gray, byte> InputImage, int y, int x)
         {
             float Result = InputImage.Data[y + 1, x - 1, 0] - InputImage.Data[y - 1, x - 1, 0] +
                 2 * InputImage.Data[y + 1, x, 0] - 2 * InputImage.Data[y - 1, x, 0] +
@@ -207,7 +207,7 @@ namespace ISIP_Algorithms.Tools
             return Result;
         }
 
-        private static float Sy(Image<Gray, byte> InputImage, int y, int x)
+        private static float Sx(Image<Gray, byte> InputImage, int y, int x)
         {
             float Result = InputImage.Data[y - 1, x + 1, 0] - InputImage.Data[y - 1, x - 1, 0] +
                 2 * InputImage.Data[y, x + 1, 0] - 2 * InputImage.Data[y, x - 1, 0] +
@@ -220,7 +220,7 @@ namespace ISIP_Algorithms.Tools
         public static Image<Gray, byte> Sobel(Image<Gray, byte> InputImage, double T)
         {
 
-            Image<Gray, byte> Result = InputImage.Clone();
+            Image<Gray, byte> Result = new Image<Gray, byte>(InputImage.Size);
             for (int y = 2; y < InputImage.Height - 3; y++)
             {
                 for (int x = 2; x < InputImage.Width - 3; x++)
@@ -233,14 +233,13 @@ namespace ISIP_Algorithms.Tools
                         Result.Data[y, x, 0] = (byte)0;
                     else
                     {
-                        double theta = Math.Atan(Fy / Fx);
+                        double theta = (180 / Math.PI) * Math.Atan(Fy / Fx);
                         if ((theta >= -95 && theta <= -85) || (theta >= 85 && theta <= 95))
                         {
                             Result.Data[y, x, 0] = (byte)255;
                         }
-                        else if ((theta >= -185 && theta <= -175) || (theta >= 175 && theta <= 185))
+                        else
                         {
-
                             Result.Data[y, x, 0] = (byte)0;
                         }
                     }
@@ -301,7 +300,7 @@ namespace ISIP_Algorithms.Tools
             {
                 for (int x = 0; x < InputImage.Width; x++)
                 {
-                    if (InputImage.Data[y,x,0] > val)
+                    if (InputImage.Data[y, x, 0] > val)
                     {
                         Result.Data[y, x, 0] = 255;
                     }
@@ -312,6 +311,57 @@ namespace ISIP_Algorithms.Tools
                 }
             }
             return Result;
+        }
+
+        //private static Image<Gray, byte> draw(Image<Gray, byte> InputImage)
+        //{
+        //    Image<Gray, byte> current = new Image<Gray, byte>(InputImage.Size);
+        //    for (int i = 1; i < InputImage.Height; i++)
+        //        for (int j = 1; j < InputImage.Width; j++)
+        //        {
+        //            current.Data[i, j, 0] = (byte)((InputImage.Data[i - 1, j, 0] + 
+        //                InputImage.Data[i + 1, j, 0] +
+        //                InputImage.Data[i , j-1, 0]+ 
+        //                InputImage.Data[i , j+1, 0])/2- 
+        //                InputImage.Data[i, j, 0]);
+        //        }
+        //    return current;
+        //}
+        public static Image<Gray, byte> Ripple(Image<Gray, byte> InputImage, double tx, double ty, double ax, double ay)
+        {
+            Image<Gray, byte> current = InputImage.Clone();
+            Image<Gray, byte> Result = new Image<Gray, byte>(InputImage.Size);
+            double Tx;
+            double Ty;
+            for (int i = 0; i < InputImage.Height; i++)
+                for (int j = 0; j < InputImage.Width; j++)
+                {
+                    double sin = Math.Sin((2 * Math.PI * j) / tx);
+                    Tx = i + ax *sin ;
+                    double cos = Math.Sin((2 * Math.PI * i) / ty);
+                    Ty = j + ay * cos;
+                    Tx = Math.Round(Tx);
+                    Ty = Math.Round(Ty);
+                    if (Tx>= InputImage.Height)
+                    {
+                        Tx = InputImage.Height - 1;
+                    } 
+                    else if(Tx<0)
+                    {
+                        Tx = 0;
+                    }
+                    if(Ty>= InputImage.Width)
+                    {
+                        Ty = InputImage.Width - 1;
+                    } 
+                    else if(Ty < 0)
+                    {
+                        Ty = 0;
+                    }
+
+                    current.Data[i, j, 0] = (byte)(InputImage.Data[(int)Tx, (int)Ty, 0]);
+                }
+            return current;
         }
     }
 }

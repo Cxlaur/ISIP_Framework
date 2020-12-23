@@ -80,6 +80,9 @@
     <Compile Include="Windows\Magnifyer.xaml.cs">
       <DependentUpon>Magnifyer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\RippleDialog.xaml.cs">
+      <DependentUpon>RippleDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\TDialog - Copy.xaml.cs">
       <DependentUpon>TDialog - Copy.xaml</DependentUpon>
     </Compile>
@@ -107,6 +110,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Magnifyer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\RippleDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

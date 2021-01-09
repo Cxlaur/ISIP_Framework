@@ -37,6 +37,7 @@ namespace ISIP_FrameworkGUI
         Windows.TDialog Tdialog;
         Windows.tDialog tdialog;
         Windows.RippleDialog rip;
+        Windows.KMean kmean;
 
 
         bool Magif_SHOW = false;
@@ -56,6 +57,7 @@ namespace ISIP_FrameworkGUI
         private double ax;
         private double ay;
         private float t;
+        private double k;
 
         public MainWindow()
         {
@@ -284,7 +286,7 @@ namespace ISIP_FrameworkGUI
                 }
                 else
                 {
-                    tdialog = new Windows.tDialog(this,false);
+                    tdialog = new Windows.tDialog(this, false);
                     tdialog.Show();
                     T_SHOW = true;
                 }
@@ -316,11 +318,26 @@ namespace ISIP_FrameworkGUI
             }
         }
 
+        public void KMeans_Click(object sender, RoutedEventArgs e)
+        {
+            if (mainControl.OriginalGrayscaleImage != null)
+            {
+                kmean = new Windows.KMean(this);
+                kmean.Show();
+            }
+        }
+
+
 
         public void setTValue(double Tvalue)
         {
             T = Tvalue;
         }
+        public void setkValue(double k)
+        {
+            this.k = k;
+        }
+
         public void settxValue(double Tvalue)
         {
             tx = Tvalue;
@@ -356,13 +373,15 @@ namespace ISIP_FrameworkGUI
         {
             mainControl.ProcessedGrayscaleImage = Tools.Contrast(mainControl.OriginalGrayscaleImage, m, E);
         }
-        
+
         public void RippleActivation()
         {
-            mainControl.ProcessedGrayscaleImage = Tools.Ripple(mainControl.OriginalGrayscaleImage,tx,ty,ax,ay);
+            mainControl.ProcessedGrayscaleImage = Tools.Ripple(mainControl.OriginalGrayscaleImage, tx, ty, ax, ay);
         }
-
-
+        public void KlusterActivation()
+        {
+            mainControl.ProcessedGrayscaleImage = Tools.Kluster(mainControl.OriginalGrayscaleImage, k);
+        }
         public void Binarizare3DActivation()
         {
             mainControl.ProcessedColorImage = Tools.Bin3D(mainControl.OriginalColorImage, T, lastClick);

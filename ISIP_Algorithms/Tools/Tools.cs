@@ -1,6 +1,7 @@
 ﻿using Emgu.CV;
 using Emgu.CV.Structure;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
 namespace ISIP_Algorithms.Tools
@@ -337,24 +338,24 @@ namespace ISIP_Algorithms.Tools
                 for (int j = 0; j < InputImage.Width; j++)
                 {
                     double sin = Math.Sin((2 * Math.PI * j) / tx);
-                    Tx = i + ax *sin ;
+                    Tx = i + ax * sin;
                     double cos = Math.Sin((2 * Math.PI * i) / ty);
                     Ty = j + ay * cos;
                     Tx = Math.Round(Tx);
                     Ty = Math.Round(Ty);
-                    if (Tx>= InputImage.Height)
+                    if (Tx >= InputImage.Height)
                     {
                         Tx = InputImage.Height - 1;
-                    } 
-                    else if(Tx<0)
+                    }
+                    else if (Tx < 0)
                     {
                         Tx = 0;
                     }
-                    if(Ty>= InputImage.Width)
+                    if (Ty >= InputImage.Width)
                     {
                         Ty = InputImage.Width - 1;
-                    } 
-                    else if(Ty < 0)
+                    }
+                    else if (Ty < 0)
                     {
                         Ty = 0;
                     }
@@ -362,6 +363,94 @@ namespace ISIP_Algorithms.Tools
                     current.Data[i, j, 0] = (byte)(InputImage.Data[(int)Tx, (int)Ty, 0]);
                 }
             return current;
+        }
+        public static Image<Gray, byte> Kluster(Image<Gray, byte> InputImage, double k)
+        {
+            Image<Gray, byte> current = InputImage.Clone();
+            Image<Gray, byte> Result = new Image<Gray, byte>(InputImage.Size);
+            int nrIntervale = (int)(k);
+            List<int> centre = new List<int>();
+            List<int> updateCentre = new List<int>();
+            List<List<int>> valPtrCentre = new List<List<int>>();
+            var rand = new Random();
+            for (int index = 0; index < nrIntervale; index++)
+            {
+                int numar;
+                do
+                {
+                    numar = rand.Next(0, 255);
+                }while (centre.Contains(numar)==true);
+                centre.Add(numar);
+                updateCentre.Add(0);
+                valPtrCentre.Add(new List<int>());
+            }
+            centre.Sort();
+            for (int index = 0; index < nrIntervale; index++)
+            {
+                if (index == 0)
+                {
+                    valPtrCentre[index].Add(0);
+                    valPtrCentre[index].Add((int)((centre[0] + centre[1]) / 2));
+                }
+                else if (index < nrIntervale - 1)
+                {
+                    valPtrCentre[index].Add(valPtrCentre[index - 1][1]);
+                    valPtrCentre[index].Add((int)((centre[index] + centre[index + 1]) / 2));
+                }
+                else
+                {
+                    valPtrCentre[index].Add(valPtrCentre[index - 1][1]);
+                    valPtrCentre[index].Add(256);
+                }
+
+            }
+            while(!updateCentre.Equals(centre))
+            {
+
+                centre.Sort();
+                updateCentre = centre;
+                for (int i = 0; i < InputImage.Height; i++)
+                {
+                    for (int j = 0; j < InputImage.Width; j++)
+                    {
+                        for (int index = 0; index < nrIntervale; index++)
+                        {
+                            if (InputImage.Data[i, j, 0] >= valPtrCentre[index][0] && InputImage.Data[i, j, 0] < valPtrCentre[index][1])
+                            {
+                                if(valPtrCentre[index].Contains(InputImage.Data[i, j, 0])==false)
+                                valPtrCentre[index].Add(InputImage.Data[i, j, 0]);
+                                //InputImage.Data[i, j, 0] = (byte)centre[index];
+                            }
+                        }
+                    }
+                }
+
+                for (int index = 0; index < nrIntervale; index++)
+                {
+                    int S = 0;
+                    for (int index2 = 0; index2 < valPtrCentre[index].Count; index2++)
+                    {
+                        S += valPtrCentre[index][index2];
+                    }
+
+                    centre[index]=((int)(S / valPtrCentre[index].Count));
+                }
+            }
+
+            for (int i = 0; i < InputImage.Height; i++)
+            {
+                for (int j = 0; j < InputImage.Width; j++)
+                {
+                    for (int index = 0; index < nrIntervale; index++)
+                    {
+                        if (InputImage.Data[i, j, 0] >= valPtrCentre[index][0] && InputImage.Data[i, j, 0] < valPtrCentre[index][1])
+                        {
+                            Result.Data[i, j, 0] = (byte)centre[index];
+                        }
+                    }
+                }
+            }
+            return Result;
         }
     }
 }

@@ -77,6 +77,9 @@
     <Compile Include="Windows\GLine.xaml.cs">
       <DependentUpon>GLine.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\KMean.xaml.cs">
+      <DependentUpon>KMean.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Magnifyer.xaml.cs">
       <DependentUpon>Magnifyer.xaml</DependentUpon>
     </Compile>
@@ -106,6 +109,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\GLine.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\KMean.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

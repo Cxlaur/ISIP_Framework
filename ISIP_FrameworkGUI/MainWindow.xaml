@@ -44,6 +44,8 @@
             </MenuItem>
             <MenuItem Header="Tranformari Geometrice">
                 <MenuItem Header="Ripple" Click="Ripple_Click"/>
+                <MenuItem Header="K-Means" Click="KMeans_Click"/>
+                
             </MenuItem>
             <MenuItem Header="Save as original image" HorizontalAlignment="Right"
                       Click="saveAsOriginalMenuItem_Click"/>
